@@ -1,0 +1,48 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Represents a user in the system.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "firstName": { "type": "string" },
+        "dob": { "type": "string", "format": "date" },
+        "age": { "type": "number" },
+        "gender": { "type": "string", "enum": ["Women", "Men", "Everyone"] },
+        "targetGender": { "type": "string", "enum": ["Women", "Men", "Everyone"] },
+        "ageRange": { "type": "object" },
+        "distance": { "type": "number" },
+        "dealbreakers": { "type": "array", "items": { "type": "string" } },
+        "onboardingComplete": { "type": "boolean" },
+        "simulationComplete": { "type": "boolean" },
+        "vibeScore": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "onboardingComplete"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "A message in a chat conversation.",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string" },
+        "text": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "isAi": { "type": "boolean" }
+      },
+      "required": ["senderId", "text", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile data."
+    },
+    "/users/{userId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Chat history for the behavioral assessment."
+    }
+  }
+}

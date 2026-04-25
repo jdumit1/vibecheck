@@ -1,0 +1,6 @@
+{
+  "name": "VibeCheck",
+  "description": "A next-generation dating app that uses AI-driven behavioral analysis to find highly compatible matches through real conversational simulation.",
+  "requestFramePermissions": ["location"],
+  "majorCapabilities": []
+}
