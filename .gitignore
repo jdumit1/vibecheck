@@ -1,19 +1,48 @@
+# Dependencies
 node_modules/
-.DS_Store
-*.pyc
-__pycache__/
 backend/venv/
-backend/vibecheck.db
+
+# Environment files (NEVER commit these)
+.env
 .env.local
+.env.production
+backend/.env
+backend/.env.local
+
+# Build artifacts
 dist/
 build/
+backend/static/
+
+# Database
+backend/vibecheck.db
+*.db
+
+# Logs
 *.log
 nohup.out
-.claude/
+frontend.log
+backend.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE/OS
+.DS_Store
 .idea/
 .vscode/
 *.swp
 *.swo
-frontend.log
-backend.log
 .eslintcache
+
+# Tools
+.claude/
+.gstack/
+backend/.gstack/
+
+# Firebase (deprecated, contains old keys)
+firebase-applet-config.json
+firebase-blueprint.json
+firestore.rules

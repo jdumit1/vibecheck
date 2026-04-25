@@ -12,3 +12,5 @@
 {"ts":"2026-04-25T13:45:44.434Z","cmd":"fill","args":"@e3 password123","origin":"http://localhost:3000/","durationMs":189,"status":"ok","hasCookies":false,"mode":"launched"}
 {"ts":"2026-04-25T13:45:45.934Z","cmd":"click","args":"@e4","origin":"http://localhost:3000/","durationMs":448,"status":"ok","hasCookies":false,"mode":"launched"}
 {"ts":"2026-04-25T13:45:49.897Z","cmd":"snapshot","args":"-i -a -o /tmp/app-after-signup.png","origin":"http://localhost:3000/","durationMs":880,"status":"ok","hasCookies":false,"mode":"launched"}
+{"ts":"2026-04-25T16:25:27.882Z","cmd":"goto","args":"https://vibecheck-production-e350.up.railway.app/","origin":"https://vibecheck-production-e350.up.railway.app/","durationMs":2756,"status":"ok","hasCookies":false,"mode":"launched"}
+{"ts":"2026-04-25T16:25:33.010Z","cmd":"screenshot","args":"/tmp/live-vibecheck.png","origin":"https://vibecheck-production-e350.up.railway.app/","durationMs":1015,"status":"ok","hasCookies":false,"mode":"launched"}
