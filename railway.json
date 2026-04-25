@@ -6,7 +6,7 @@
   },
   "deploy": {
     "numReplicas": 1,
-    "startCommand": "cd backend && python main.py",
+    "startCommand": "python main.py",
     "restartPolicyMaxRetries": 5
   }
 }

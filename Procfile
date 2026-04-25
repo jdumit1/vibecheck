@@ -1,1 +1,1 @@
-web: bash build.sh && cd backend && python main.py
+web: bash build.sh && python main.py
