@@ -229,13 +229,10 @@ def health_check():
 static_dir = Path(__file__).parent / "static"
 if static_dir.exists():
     app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
-
-@app.get("/")
-def serve_index():
-    index_file = static_dir / "index.html"
-    if index_file.exists():
-        return FileResponse(index_file)
-    return {"message": "VibeCheck API - Frontend not built yet"}
+else:
+    @app.get("/")
+    def serve_index():
+        return {"message": "VibeCheck API - Frontend not built yet"}
 
 if __name__ == "__main__":
     import uvicorn
