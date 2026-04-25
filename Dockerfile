@@ -1,9 +1,11 @@
-FROM node:18-alpine AS frontend-build
+FROM node:20-slim AS frontend-build
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci --verbose
+COPY package.json ./
+
+# Use npm install (not ci) to handle optional deps correctly for the platform
+RUN npm install
 
 COPY . .
 RUN npm run build && ls -la dist/
