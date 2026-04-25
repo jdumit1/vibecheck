@@ -173,9 +173,20 @@ def send_message(
     db.refresh(message)
 
     if msg.isAi:
-        return message.__dict__
+        return {"id": message.id, "text": message.text, "isAi": True}
 
-    ai_response_text = get_ai_response(msg.text, current_user.first_name)
+    history_msgs = db.query(Message).filter(
+        Message.user_id == current_user.id,
+        Message.id != message.id
+    ).order_by(Message.timestamp).all()
+
+    history = [
+        {"text": m.text, "isAi": m.is_ai}
+        for m in history_msgs
+    ]
+
+    ai_response_text = get_ai_response(msg.text, current_user.first_name, history)
+
     ai_message = Message(
         user_id=current_user.id,
         sender_id="ai",
