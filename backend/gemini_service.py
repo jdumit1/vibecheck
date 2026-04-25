@@ -15,7 +15,7 @@ if GEMINI_API_KEY:
 else:
     logger.warning("GEMINI_API_KEY not set - AI responses will be fallbacks")
 
-MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-3.1-flash")
 
 ALEX_PERSONA = """You are Alex, a 26-year-old engaging in a casual dating chat.
 
