@@ -225,6 +225,23 @@ def mark_match_found(
 def health_check():
     return {"status": "ok"}
 
+@app.get("/api/debug")
+def debug_info():
+    """Debug endpoint to inspect filesystem"""
+    cwd = Path.cwd()
+    script_dir = Path(__file__).parent
+    static_dir = script_dir / "static"
+
+    return {
+        "cwd": str(cwd),
+        "script_dir": str(script_dir),
+        "static_dir": str(static_dir),
+        "static_exists": static_dir.exists(),
+        "cwd_contents": [str(p.name) for p in cwd.iterdir()] if cwd.exists() else [],
+        "script_dir_contents": [str(p.name) for p in script_dir.iterdir()] if script_dir.exists() else [],
+        "static_contents": [str(p.name) for p in static_dir.iterdir()] if static_dir.exists() else [],
+    }
+
 # Serve static files (frontend build)
 static_dir = Path(__file__).parent / "static"
 if static_dir.exists():
@@ -232,7 +249,10 @@ if static_dir.exists():
 else:
     @app.get("/")
     def serve_index():
-        return {"message": "VibeCheck API - Frontend not built yet"}
+        return {
+            "message": "VibeCheck API - Frontend not built yet",
+            "debug_url": "/api/debug"
+        }
 
 if __name__ == "__main__":
     import uvicorn
