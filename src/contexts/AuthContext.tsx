@@ -1,21 +1,13 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
-import { apiService } from "../services/apiService";
+import { apiService, type MatchThread, type UserProfile } from "../services/apiService";
 
 interface User {
   uid: string;
   email: string;
 }
 
-interface Profile {
-  uid: string;
-  firstName: string;
-  age?: number;
-  distance?: number;
-  onboardingComplete: boolean;
-  simulationComplete: boolean;
-  matchFound: boolean;
-  vibeScore?: any;
-  createdAt?: string;
+interface Profile extends UserProfile {
+  matches?: MatchThread[];
 }
 
 interface AuthContextType {
@@ -80,6 +72,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile({
       uid: response.user.id,
       firstName: response.user.firstName,
+      interests: [],
+      photos: [],
+      matches: [],
+      activeMatchId: null,
       onboardingComplete: false,
       simulationComplete: false,
       matchFound: false,

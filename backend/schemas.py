@@ -13,7 +13,30 @@ class UserLogin(BaseModel):
 class UserProfileUpdate(BaseModel):
     age: Optional[int] = None
     distance: Optional[int] = None
+    bio: Optional[str] = None
+    location: Optional[str] = None
     interests: Optional[List[str]] = None
+    photos: Optional[List[str]] = None
+
+class PhotoOrderUpdate(BaseModel):
+    photos: List[str]
+
+
+class MatchCreate(BaseModel):
+    id: str
+    name: str
+    age: int
+    job: str
+    distance: str
+    bio: str
+    badges: List[str]
+    compatibility: int
+    prompt: str
+    photos: List[str]
+
+
+class MatchMessageCreate(BaseModel):
+    text: str
 
 class MessageCreate(BaseModel):
     senderId: str
@@ -32,6 +55,12 @@ class UserProfileResponse(BaseModel):
     firstName: str
     age: Optional[int] = None
     distance: Optional[int] = None
+    bio: Optional[str] = None
+    location: Optional[str] = None
+    interests: List[str] = []
+    photos: List[str] = []
+    matches: List[dict] = []
+    activeMatchId: Optional[str] = None
     onboardingComplete: bool
     simulationComplete: bool
     matchFound: bool

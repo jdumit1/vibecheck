@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Send, User, Bot, Sparkles, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { apiService } from '../services/apiService';
+import { apiService, type VibeProfile } from '../services/apiService';
 
 export function Simulation() {
   const { user, profile, refreshProfile } = useAuth();
@@ -10,6 +10,7 @@ export function Simulation() {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [vibePreview, setVibePreview] = useState<VibeProfile | null>(profile?.vibeScore || null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const token = localStorage.getItem("token") || "";
@@ -19,11 +20,22 @@ export function Simulation() {
 
     const loadMessages = async () => {
       try {
+        let currentVibe = profile?.vibeScore || vibePreview;
+        if (!currentVibe?.subcategory) {
+          const vibeResponse = await apiService.runVibeCheck(token);
+          currentVibe = vibeResponse.vibeScore;
+          setVibePreview(vibeResponse.vibeScore);
+          await refreshProfile();
+        }
+
         const msgs = await apiService.getMessages(token);
         setMessages(msgs);
 
         if (msgs.length === 0) {
-          await sendAiMessage("Hey! I'm Alex. I saw we both listed some similar interests. How are you doing today?");
+          const intro = currentVibe?.subcategory
+            ? `Hey! I'm Alex. Your profile reads like a ${currentVibe.subcategory.toLowerCase()} looking for ${currentVibe.lookingFor?.toLowerCase() || 'something real'}. I wanted to see if that vibe is actually true. How are you doing today?`
+            : "Hey! I'm Alex. I saw we both listed some similar interests. How are you doing today?";
+          await sendAiMessage(intro);
         }
       } catch (err) {
         console.error("Failed to load messages:", err);
@@ -33,7 +45,7 @@ export function Simulation() {
     loadMessages();
     const interval = setInterval(loadMessages, 2000);
     return () => clearInterval(interval);
-  }, [user, token]);
+  }, [user, token, profile?.vibeScore, refreshProfile, vibePreview]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -97,7 +109,7 @@ export function Simulation() {
             <h2 className="text-slate-900 font-bold">Alex</h2>
             <p className="text-[10px] text-rose-500 font-black uppercase tracking-widest flex items-center gap-1">
               <Sparkles className="w-3 h-3" />
-              Active Now
+              {vibePreview?.subcategory ? `${vibePreview.subcategory} calibration` : 'Active Now'}
             </p>
           </div>
         </div>
@@ -160,6 +172,13 @@ export function Simulation() {
 
       {/* Input */}
       <footer className="p-6 bg-white border-t border-slate-100">
+        {vibePreview?.subcategory && (
+          <div className="max-w-2xl mx-auto mb-4 rounded-2xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-slate-600 shadow-sm">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-rose-500">Vibe check</p>
+            <p className="mt-1 font-semibold text-slate-900">{vibePreview.subcategory}</p>
+            <p className="mt-1 leading-6">{vibePreview.summary}</p>
+          </div>
+        )}
         <form onSubmit={handleSend} className="max-w-2xl mx-auto relative">
           <input
             type="text"

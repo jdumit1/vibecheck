@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Awooga x VibeCheck Demo Day</title>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --muted: #5b6475;
+      --paper: #f8f7f2;
+      --surface: rgba(255, 255, 255, 0.78);
+      --line: rgba(15, 23, 42, 0.1);
+      --google-blue: #4285f4;
+      --google-red: #ea4335;
+      --google-yellow: #fbbc05;
+      --google-green: #34a853;
+      --shadow: 0 32px 80px rgba(15, 23, 42, 0.14);
+      --radius: 28px;
+      --max-width: 1180px;
+      --headline: "Avenir Next", "Segoe UI", sans-serif;
+      --body: "Iowan Old Style", "Palatino Linotype", serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(66, 133, 244, 0.18), transparent 22%),
+        radial-gradient(circle at top right, rgba(251, 188, 5, 0.22), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(234, 67, 53, 0.16), transparent 18%),
+        linear-gradient(180deg, #fcfbf8 0%, #f4f6fb 58%, #eef3f9 100%);
+      color: var(--ink);
+    }
+
+    body {
+      font-family: var(--body);
+      overflow: hidden;
+    }
+
+    .deck-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 24px;
+      gap: 18px;
+    }
+
+    .topbar,
+    .footerbar {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand-badge {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--google-blue), var(--google-green));
+      box-shadow: 12px 0 0 -4px var(--google-red), 24px 0 0 -4px var(--google-yellow);
+      position: relative;
+      margin-right: 18px;
+    }
+
+    .brand-text {
+      font-family: var(--headline);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .progress-wrap {
+      flex: 1;
+      max-width: 320px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(16px);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 12.5%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--google-blue), var(--google-green));
+      transition: width 220ms ease;
+    }
+
+    .stage {
+      width: min(100%, var(--max-width));
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      background: rgba(255, 255, 255, 0.38);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px);
+    }
+
+    .slides {
+      height: 100%;
+      position: relative;
+      min-height: calc(100vh - 170px);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: clamp(28px, 4vw, 54px);
+      display: grid;
+      gap: 28px;
+      opacity: 0;
+      transform: translateX(36px) scale(0.98);
+      pointer-events: none;
+      transition: opacity 240ms ease, transform 280ms ease;
+      overflow: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .eyebrow {
+      font-family: var(--headline);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      color: var(--google-blue);
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: var(--headline);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    h1 {
+      font-size: clamp(56px, 8vw, 108px);
+      max-width: 11ch;
+    }
+
+    h2 {
+      font-size: clamp(36px, 5vw, 68px);
+      max-width: 12ch;
+    }
+
+    h3 {
+      font-size: 24px;
+      line-height: 1.05;
+    }
+
+    p,
+    li {
+      font-size: clamp(16px, 1.35vw, 22px);
+      line-height: 1.5;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .hero-grid,
+    .two-col,
+    .three-col,
+    .four-col {
+      display: grid;
+      gap: 20px;
+    }
+
+    .hero-grid,
+    .two-col {
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: stretch;
+    }
+
+    .three-col {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .four-col {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card,
+    .panel,
+    .metric {
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.84);
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.07);
+      backdrop-filter: blur(20px);
+    }
+
+    .panel {
+      padding: 22px;
+    }
+
+    .card {
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .metric {
+      padding: 20px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .metric-value {
+      font-family: var(--headline);
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+    }
+
+    .tag-row,
+    .bullet-list,
+    .mini-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .tag-row {
+      grid-template-columns: repeat(auto-fit, minmax(140px, max-content));
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.06);
+      color: var(--ink);
+      font-family: var(--headline);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    ul {
+      padding-left: 1.2em;
+      margin: 0;
+    }
+
+    .google-stack {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .product-chip {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      display: grid;
+      gap: 10px;
+    }
+
+    .product-chip strong {
+      font-family: var(--headline);
+      font-size: 18px;
+      color: var(--ink);
+    }
+
+    .live {
+      color: var(--google-green);
+    }
+
+    .scaffolded {
+      color: var(--google-yellow);
+    }
+
+    .future {
+      color: var(--google-blue);
+    }
+
+    .quote-block {
+      padding: 28px;
+      border-radius: 32px;
+      background:
+        linear-gradient(135deg, rgba(66, 133, 244, 0.9), rgba(52, 168, 83, 0.88));
+      color: white;
+      box-shadow: 0 24px 60px rgba(66, 133, 244, 0.22);
+    }
+
+    .quote-block p,
+    .quote-block li {
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .footerbar {
+      padding: 0 4px;
+    }
+
+    .slide-index {
+      font-family: var(--headline);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .control-button {
+      border: none;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      color: var(--ink);
+      padding: 12px 18px;
+      font-family: var(--headline);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .control-button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      font-family: var(--headline);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .grid-note {
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      align-items: center;
+    }
+
+    .flow-step {
+      padding: 16px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      min-height: 120px;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .arrow {
+      text-align: center;
+      font-family: var(--headline);
+      font-size: 32px;
+      color: rgba(15, 23, 42, 0.22);
+    }
+
+    .small {
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 960px) {
+      body {
+        overflow: auto;
+      }
+
+      .deck-shell {
+        padding: 14px;
+      }
+
+      .slides {
+        min-height: auto;
+      }
+
+      .slide {
+        position: relative;
+        min-height: 100%;
+      }
+
+      .hero-grid,
+      .two-col,
+      .three-col,
+      .four-col,
+      .google-stack,
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .arrow {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck-shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-badge"></div>
+        <div class="brand-text">Awooga Demo Day Deck</div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <main class="stage">
+      <div class="slides">
+        <section class="slide active" data-title="Cover">
+          <div class="hero-grid">
+            <div class="card" style="background: rgba(255,255,255,0.9);">
+              <div class="eyebrow">Awooga Presents</div>
+              <h1>VibeCheck</h1>
+              <p>
+                A behavioral matching app from Awooga that uses conversation, profile signals, and persistent match threads to move beyond shallow swipe mechanics.
+              </p>
+              <div class="tag-row">
+                <span class="tag">Demo Day</span>
+                <span class="tag">React + Vite</span>
+                <span class="tag">FastAPI</span>
+                <span class="tag">Gemini 3.1 Flash</span>
+              </div>
+            </div>
+            <div class="quote-block">
+              <div class="eyebrow" style="color: rgba(255,255,255,0.72);">Pitch To Google</div>
+              <h2 style="max-width: 8ch;">Match on behavior, not just appearance.</h2>
+              <p>
+                Awooga is showing how Gemini can become the operating layer for a dating product, not just a chatbot bolted onto one.
+              </p>
+            </div>
+          </div>
+          <div class="three-col">
+            <div class="metric">
+              <div class="eyebrow">Today</div>
+              <div class="metric-value">Live</div>
+              <p>Persistent matches, gallery-based discover deck, vibe-check analysis, and inbox behaviors are implemented.</p>
+            </div>
+            <div class="metric">
+              <div class="eyebrow">Google Value</div>
+              <div class="metric-value">2 Layers</div>
+              <p>Google products already power the AI layer, and Firebase scaffolding creates a clear Google-native expansion path.</p>
+            </div>
+            <div class="metric">
+              <div class="eyebrow">Audience</div>
+              <div class="metric-value">Google</div>
+              <p>This version of the deck is tuned for Demo Day, with Google as the target audience for the product and platform story.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-title="Problem">
+          <div class="eyebrow">Demo Day Framing</div>
+          <h2>Most swipe apps optimize for heat, not fit.</h2>
+          <div class="three-col">
+            <div class="card">
+              <h3>Shallow Discovery</h3>
+              <p>Traditional swipe apps over-index on a photo-first decision and under-weight communication style, taste, and intent.</p>
+            </div>
+            <div class="card">
+              <h3>Weak Match Quality</h3>
+              <p>Users get plenty of activity but too little signal about who they will actually enjoy talking to after the first hello.</p>
+            </div>
+            <div class="card">
+              <h3>No Real Memory</h3>
+              <p>Without persistent context, product decisions do not improve over time and matches feel disposable instead of compounding.</p>
+            </div>
+          </div>
+          <div class="panel">
+            <p>
+              VibeCheck reframes the product around behavioral intelligence: first understand the user’s tone, archetype, and preferences, then use those signals to improve discovery, messaging, and match prioritization.
+            </p>
+          </div>
+        </section>
+
+        <section class="slide" data-title="Flow">
+          <div class="eyebrow">Current Product Loop</div>
+          <h2>Profile setup becomes data, not ceremony.</h2>
+          <div class="flow">
+            <div class="flow-step">
+              <div class="eyebrow">1</div>
+              <h3>Onboarding</h3>
+              <p class="small">Users add bio, location, interests, and a structured photo gallery.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="flow-step">
+              <div class="eyebrow">2</div>
+              <h3>Vibe Check</h3>
+              <p class="small">The app infers subcategory, relational intent, preferred badges, and partner traits.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="flow-step">
+              <div class="eyebrow">3</div>
+              <h3>AI Simulation</h3>
+              <p class="small">A Gemini-driven chat simulation pressure-tests how the user actually communicates.</p>
+            </div>
+          </div>
+          <div class="flow" style="margin-top: 12px;">
+            <div class="flow-step">
+              <div class="eyebrow">4</div>
+              <h3>Personalized Discover</h3>
+              <p class="small">The card deck is weighted toward profiles whose signals align with the user’s vibe profile.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="flow-step">
+              <div class="eyebrow">5</div>
+              <h3>Persistent Matches</h3>
+              <p class="small">Right swipes now create real chat threads with unread state, timestamps, and recency ordering.</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="flow-step">
+              <div class="eyebrow">6</div>
+              <h3>Feedback Loop</h3>
+              <p class="small">Each new signal sharpens who the product should show next and how it should prioritize conversations.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-title="Architecture">
+          <div class="eyebrow">Architecture</div>
+          <h2>Modern web app with an AI decision layer.</h2>
+          <div class="two-col">
+            <div class="panel">
+              <div class="eyebrow">Frontend</div>
+              <ul>
+                <li>React 19 + TypeScript + Vite</li>
+                <li>Tinder/Bumble-style discover deck with gallery viewer</li>
+                <li>Persistent match inbox with timestamps, unread state, and simulated incoming replies</li>
+                <li>Simulation UI that runs a vibe check before starting the AI conversation</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <div class="eyebrow">Backend</div>
+              <ul>
+                <li>FastAPI + SQLAlchemy + SQLite today</li>
+                <li>Profile storage, photo upload handling, message history, and match-thread persistence</li>
+                <li>AI endpoints for vibe profiling, simulation completion, and reply generation</li>
+                <li>Railway deployment path with env-driven Gemini configuration</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel">
+            <p>
+              The product is already structured so the AI layer is not decorative. It directly affects matching, inbox behavior, and how the deck is prioritized.
+            </p>
+          </div>
+        </section>
+
+        <section class="slide" data-title="Google Today">
+          <div class="eyebrow">Google Products In Use Today</div>
+          <h2>Google already powers the intelligence layer.</h2>
+          <div class="google-stack">
+            <div class="product-chip">
+              <strong class="live">Google Gemini API</strong>
+              <p>Live in the backend for conversation responses, vibe scoring, and archetype generation.</p>
+            </div>
+            <div class="product-chip">
+              <strong class="live">Gemini 3.1 Flash</strong>
+              <p>The current default model for fast behavioral analysis and lightweight conversational inference.</p>
+            </div>
+            <div class="product-chip">
+              <strong class="live">Google AI Studio Workflow</strong>
+              <p>The app is wired around `GEMINI_API_KEY` and model configuration patterns that map directly to Gemini developer tooling.</p>
+            </div>
+            <div class="product-chip">
+              <strong class="scaffolded">Firebase Package + Config</strong>
+              <p>The repo includes Firebase dependencies plus project config, auth domain, Firestore database ID, and Storage bucket metadata for a Google-native scale-up path.</p>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="eyebrow">Live Examples</div>
+            <ul>
+              <li>`get_ai_response(...)` drives the simulation persona.</li>
+              <li>`build_vibe_profile(...)` generates `subcategory`, `lookingFor`, and preference traits.</li>
+              <li>`/api/simulation/vibe-check` persists a user archetype before discovery ranking begins.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="slide" data-title="Google Fit">
+          <div class="eyebrow">Why Google Should Care</div>
+          <h2>Google is a strategic fit, not just an API vendor.</h2>
+          <div class="three-col">
+            <div class="card">
+              <h3>Fast AI Feedback</h3>
+              <p>Gemini Flash is a strong fit for low-latency reasoning where the product needs quick categorization, adaptive ranking, and chat continuity.</p>
+            </div>
+            <div class="card">
+              <h3>Unified Expansion Path</h3>
+              <p>Firebase config already exists in the repo, making it realistic to move auth, storage, or real-time sync onto Google infrastructure later.</p>
+            </div>
+            <div class="card">
+              <h3>AI-Native Product Story</h3>
+              <p>The value proposition is behavioral matching, which maps cleanly to Gemini-driven classification, summarization, recommendation logic, and future multimodal ranking.</p>
+            </div>
+          </div>
+          <div class="quote-block">
+            <div class="eyebrow" style="color: rgba(255,255,255,0.72);">Demo Day Translation</div>
+            <p>
+              For Google, the clean story is: Awooga is building a consumer product where Google AI changes the matching logic, the message quality, and the recommendation engine at the exact points that differentiate the experience.
+            </p>
+          </div>
+        </section>
+
+        <section class="slide" data-title="Google Roadmap">
+          <div class="eyebrow">Google-Native Roadmap</div>
+          <h2>What a deeper Google stack could unlock next.</h2>
+          <div class="four-col">
+            <div class="card">
+              <h3 class="future">Firebase Auth</h3>
+              <p class="small">Replace local auth handling with a stronger identity layer and easier provider sign-in for consumer onboarding.</p>
+            </div>
+            <div class="card">
+              <h3 class="future">Cloud Firestore</h3>
+              <p class="small">Turn match threads into real-time documents instead of app-local JSON blobs, making the inbox truly multi-user.</p>
+            </div>
+            <div class="card">
+              <h3 class="future">Cloud Storage</h3>
+              <p class="small">Move profile gallery assets into Google-managed storage with cleaner delivery and scaling.</p>
+            </div>
+            <div class="card">
+              <h3 class="future">Analytics + App Check</h3>
+              <p class="small">Measure onboarding drop-off, match quality, and protect abuse-sensitive AI endpoints at consumer scale.</p>
+            </div>
+          </div>
+          <div class="panel">
+            <p>
+              The important distinction for Demo Day: Gemini is already live in the product. Firebase is best described as scaffolded and strategically plausible, not yet core to runtime.
+            </p>
+          </div>
+        </section>
+
+        <section class="slide" data-title="Takeaway">
+          <div class="eyebrow">Close</div>
+          <h2>Awooga gives Google a concrete demo of what an AI-native dating product can look like.</h2>
+          <div class="two-col">
+            <div class="panel">
+              <div class="eyebrow">What’s True Right Now</div>
+              <ul>
+                <li>Google Gemini already powers the intelligence layer.</li>
+                <li>The product demonstrates real AI-driven behavior changes in discovery and messaging.</li>
+                <li>The repo contains Firebase artifacts that make a Google-native expansion believable.</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <div class="eyebrow">Best Demo Day Line</div>
+              <p>
+                “Awooga is building a dating product where Google Gemini is not a feature bolt-on. It is the system that interprets who the user is, what kind of chemistry they want, and how the app should react next.”
+              </p>
+            </div>
+          </div>
+          <div class="status-pill">Use left/right arrow keys or the buttons below to present to a Demo Day audience</div>
+        </section>
+      </div>
+    </main>
+
+    <div class="footerbar">
+      <div class="slide-index" id="slideIndex">Slide 1 / 8</div>
+      <div class="controls">
+        <button class="control-button" id="prevButton">Previous</button>
+        <button class="control-button" id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const slideIndex = document.getElementById('slideIndex');
+    const progressBar = document.getElementById('progressBar');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+
+    let activeIndex = 0;
+
+    function renderSlides() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === activeIndex);
+      });
+
+      slideIndex.textContent = `Slide ${activeIndex + 1} / ${slides.length}`;
+      progressBar.style.width = `${((activeIndex + 1) / slides.length) * 100}%`;
+      prevButton.disabled = activeIndex === 0;
+      nextButton.disabled = activeIndex === slides.length - 1;
+      document.title = `Awooga x VibeCheck - ${slides[activeIndex].dataset.title}`;
+    }
+
+    function goTo(index) {
+      activeIndex = Math.max(0, Math.min(index, slides.length - 1));
+      renderSlides();
+    }
+
+    prevButton.addEventListener('click', () => goTo(activeIndex - 1));
+    nextButton.addEventListener('click', () => goTo(activeIndex + 1));
+
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+        goTo(activeIndex + 1);
+      }
+      if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+        goTo(activeIndex - 1);
+      }
+    });
+
+    renderSlides();
+  </script>
+</body>
+</html>
